@@ -1,5 +1,10 @@
 import { useState } from 'react'
 
+// return a random number between zero and max, inclusive
+function getRandomNumber(max) {
+  return Math.floor(Math.random() * (max + 1))
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -11,12 +16,16 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+  
+  const max = anecdotes.length - 1
   const [selected, setSelected] = useState(0)
+
+  const handleClick = () => setSelected(getRandomNumber(max))
 
   return (
     <div>
-      {anecdotes[selected]}
+      <p>{anecdotes[selected]}</p>
+      <button onClick={handleClick}>next anecdote</button>
     </div>
   )
 }
