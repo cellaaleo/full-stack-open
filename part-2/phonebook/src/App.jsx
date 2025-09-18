@@ -13,10 +13,13 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault()
 
-    const personObject = { name: newName }
-
-    setPersons(persons.concat(personObject))
-    setNewName('')
+    if (isValidName(newName, persons)) {
+      const personObject = { name: newName.trim() }
+      setPersons(persons.concat(personObject))
+      setNewName('')
+    } else {
+      alert(`${newName.trim()} is already added to phonebook`)
+    }
   }
 
   return (
@@ -40,5 +43,15 @@ const App = () => {
     </div>
   )
 }
+
+function isValidName(newName, persons) {
+  let isValid = true
+  persons.forEach((person) => {
+    if (person.name.toLowerCase() === newName.toLowerCase().trim()) {
+      isValid = false
+    } 
+  })
+  return isValid
+} 
 
 export default App
