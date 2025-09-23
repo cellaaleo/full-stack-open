@@ -1,6 +1,7 @@
 import { useState } from 'react'
-
-const Person = ({ person }) => <li>{person.name} {person.number}</li>
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -17,15 +18,15 @@ const App = () => {
   const handleNumberChange = (event) => setNewNumber(event.target.value.replace(/[^0-9-]/, ''))
   const handleSearchChange = (event) => setNewSearch(event.target.value)
 
-  const result = persons.filter((person) => 
-    person.name.toLowerCase().includes(newSearch.toLowerCase())
-  )
-
   const addName = (event) => {
     event.preventDefault()
 
     if (isValidName(newName, persons)) {
-      const personObject = { name: newName.trim(), number: newNumber }
+      const personObject = { 
+        name: newName.trim(),
+        number: newNumber,
+        id: persons.length + 1
+      }
       setPersons(persons.concat(personObject))
       setNewName('')
       setNewNumber('')
@@ -37,33 +38,25 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-        <div>
-          Filter by name <input type="search" value={newSearch} onChange={handleSearchChange} />
-        </div>
 
-      <h2>Add new contact</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Filter value={newSearch} onChange={handleSearchChange} />
 
-      <h2>Numbers</h2>
-      <ul>
-        {result.map(person => 
-            <Person key={person.name} person={person} />
-        )}
-      </ul>
+      <h3>Add new contact</h3>
+      <PersonForm
+         onSubmit={addName}
+         nameValue={newName}
+         onNameChange={handleNameChange}
+         numberValue={newNumber}
+         onNumberChange={handleNumberChange}
+      />
 
+      <h3>Numbers</h3>
+      <Persons persons={persons} newSearch={newSearch} />
     </div>
   )
 }
+
+export default App
 
 function isValidName(newName, persons) {
   let isValid = true
@@ -74,5 +67,3 @@ function isValidName(newName, persons) {
   })
   return isValid
 } 
-
-export default App
